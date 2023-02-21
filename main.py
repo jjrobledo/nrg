@@ -5,8 +5,11 @@ print(path)
 
 files = os.listdir(path)
 
+shapefiles = []
+
 for file in files:
     if file.casefold().endswith('.shp'):
-        print(file)
+        shapefiles.append(file)
 
 
+print(shapefiles)
