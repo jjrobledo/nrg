@@ -3,20 +3,24 @@ import geopandas as gpd
 
 
 def shapefile_to_csv(filename, path):
+    # change dir to /shapefile
+    # set output_directory to /csv
     os.chdir(path)
     directory = 'csv'
     output_directory = os.path.join(path, directory)
 
+    # read a shapefile in /shape and set an output filename with a csv extension
     df = gpd.read_file(filename)
     output_filename = filename.split('.')[0] + '.csv'
 
     try:
+        # try: make a new directory called csv in the current directory /shape
         os.mkdir(output_directory)
         print("Output folder created")
     except Exception:
         pass
 
-    print(output_directory, output_filename)
+    # open a new file at - ./csv/output_filename.csv and write all rows of the dataframe to the new file
     with open(os.path.join(output_directory + '/' + output_filename), 'w') as f:
         for nmcris_number in df.iActivityN.tolist():
             f.write(str(nmcris_number) + ', ')
