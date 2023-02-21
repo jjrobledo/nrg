@@ -4,6 +4,7 @@ import re
 
 # TODO
 #  remove call to df cleaner outside of function
+# save the final merged df to a file
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -50,7 +51,7 @@ def csv_cleaner(df):
 def xlsx_cleaner(df):
     df = df.rename(columns={'NMCRIS Activity #': 'nmcris_number'})
     df = df.drop(['Performing Organization', 'Total Acres', 'Report Title', 'Record Status', 'Performing Org. Report #',
-                  'Lead Agency', 'Lead Agency Report #', 'Activity ID', 'Resource Count', 'Starting Date',
+                  'Lead Agency', 'Lead Agency Report #', 'Activity ID', 'Starting Date',
                   'Activity Type', 'Author'], axis=1)
 
     return df
@@ -83,9 +84,11 @@ def nmcris_file_processor():
         xlsx = xlsx_cleaner(xlsx)
 
         # join the csv to the xlsx
-        merged = pd.merge(csv, xlsx, on=['nmcris_number'])
+        merged = pd.merge(csv, xlsx, on='nmcris_number')
         # add parcel_name to merged df
         merged['parcel_id'] = parcel_id
+        merged['report_date'] = pd.to_datetime(merged['report_date'])
+        merged['year'] = merged['report_date'].dt.year
 
         merged = merged_df_cleaner(merged)
         # merge the cleaned and joined df to the new df
@@ -98,6 +101,26 @@ def save_parcel_stats(df):
     return df.groupby('parcel_id')['acres'].sum()
 
 
+import csv
+
+
+def csv_to_bibtex(csv_file, bibtex_file):
+    with open(csv_file, 'r') as f:
+        reader = csv.DictReader(f)
+        with open(bibtex_file, 'w') as g:
+            for row in reader:
+                g.write("@techreport{" + row['nmcris_number'] + ",\n")
+                g.write("  author = {" + row['author'] + "},\n")
+                g.write("  institution = {" + row['performing_organization'] + "},\n")
+                g.write("  title = {" + row['title'] + "},\n")
+                g.write("  year = {" + row['year'] + "},\n")
+                g.write("  number = {" + row['nmcris_number'] + "},\n")
+                g.write("}\n\n")
+
+
 merged_df = nmcris_file_processor()
-print(nmcris_file_processor())
+merged_df.to_csv(path + '/final.csv')
 print(save_parcel_stats(merged_df))
+# Example usage:
+print(merged_df[merged_df.duplicated()])
+csv_to_bibtex(path + '/final.csv', path + '/bib.bib')
