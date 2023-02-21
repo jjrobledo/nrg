@@ -65,6 +65,6 @@ def clean_dataframe(df):
     df = df.rename(
         columns={'iActivityN': 'nmcris_number', 'dFieldStar': 'field_date', 'sPerfOrgNa': 'performing_organization',
                  'sPerfOrigin': 'performing_organiation_id', 'sReportTit': 'title', 'sAuthor': 'author',
-                 'dReportDat': 'report_data', 'bSurvey3': 'survey', 'rSurveyAcr': 'acres'})
+                 'dReportDat': 'report_date', 'bSurvey3': 'survey', 'rSurveyAcr': 'acres'})
 
     return df
