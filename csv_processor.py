@@ -27,10 +27,10 @@ import os
 import re
 
 df = pd.DataFrame()
+path = os.getcwd() + '/shape/csv'
 
 
 def get_data_files():
-    path = os.getcwd() + '/shape/csv'
     files = os.listdir(path)
 
     matching_prefix_files = []
@@ -75,9 +75,15 @@ def nmcris_file_processor():
     file_dictionary = get_data_files()
 
     for dictionary in file_dictionary:
-        print(dictionary)
+        parcel_id = dictionary['prefix']
+        csv_file = dictionary['files']['.csv']
+        xlsx_file = dictionary['files']['.xlsx']
 
-    print(dictionary)
+        csv = pd.read_csv(path + '/' + csv_file)
+        xlsx = pd.read_excel(path + '/' + xlsx_file)
+
+        print(csv.head(1))
+        print(xlsx.head(1))
 
     # try opening a csv and xlsx for each parcel_id and assign each to a variable
 
