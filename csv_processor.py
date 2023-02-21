@@ -1,30 +1,9 @@
-# drop tables from spreadsheets
-# df = df.drop(['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip','geometry'],axis=1)
-# x = x.rename(columns={'NMCRIS Activity #': 'nmcris_number', 'Author': 'author'})
-# x = x.drop(['performing_organization', 'total_acres', 'report_title'], axis=1)
-
-# join the csv and xlsx into one df
-# parcel_name = filename.split('_')[0]
-
-# add parcel_name to merged df
-# merged = pd.merge(csv, x, on=['nmcris_number']
-
-# parcel_name = filename.split('_')[0]
-
-# add parcel_name to merged df
-# merged['parcel_id'] = parcel_name
-
-
-# concat two dataframes
-# df = pd.concat([df, merged])
-
-
-#############################################################
-
-# Create an empty dataframe
 import pandas as pd
 import os
 import re
+
+# TODO
+#  remove call to df cleaner outside of function
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -32,7 +11,6 @@ pd.set_option('display.width', 1000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 
-df = pd.DataFrame()
 path = os.getcwd() + '/shape/csv'
 
 
@@ -70,10 +48,18 @@ def csv_cleaner(df):
 
 
 def xlsx_cleaner(df):
-    df = df.rename(columns={'NMCRIS Activity #': 'nmcris_number', 'Author': 'author'})
+    df = df.rename(columns={'NMCRIS Activity #': 'nmcris_number'})
     df = df.drop(['Performing Organization', 'Total Acres', 'Report Title', 'Record Status', 'Performing Org. Report #',
                   'Lead Agency', 'Lead Agency Report #', 'Activity ID', 'Resource Count', 'Starting Date',
-                  'Activity Type'], axis=1)
+                  'Activity Type', 'Author'], axis=1)
+
+    return df
+
+
+def merged_df_cleaner(df):
+    df.loc[df.title.str.isupper(), 'title'] = df.title.str.title()
+    df.author = df.author.str.title()
+    df.performing_organization = df.performing_organization.str.title()
 
     return df
 
@@ -93,7 +79,6 @@ def nmcris_file_processor():
         csv = pd.read_csv(path + '/' + csv_file)
         xlsx = pd.read_excel(path + '/' + xlsx_file)
 
-        # clean the csv
         # clean the xlsx
         xlsx = xlsx_cleaner(xlsx)
 
@@ -102,6 +87,7 @@ def nmcris_file_processor():
         # add parcel_name to merged df
         merged['parcel_id'] = parcel_id
 
+        merged = merged_df_cleaner(merged)
         # merge the cleaned and joined df to the new df
         df = pd.concat([df, merged])
 
