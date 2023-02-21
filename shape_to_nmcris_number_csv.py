@@ -12,6 +12,7 @@ def make_directory(path, directory_name):
     except Exception:
         pass
 
+    return output_directory
 
 def shapefile_to_csv(filename, path):
     # change dir to /shapefile
