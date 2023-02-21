@@ -61,8 +61,7 @@ def process_shapefiles(filename_list, path):
 def clean_dataframe(df):
     df = df.drop(
         ['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip',
-         'geometry'],
-        axis=1)
+         'geometry'], axis=1)
     df = df.rename(
         columns={'iActivityN': 'nmcris_number', 'dFieldStar': 'field_date', 'sPerfOrgNa': 'performing_organization',
                  'sPerfOrigin': 'performing_organiation_id', 'sReportTit': 'title', 'sAuthor': 'author',
