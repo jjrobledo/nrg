@@ -94,4 +94,10 @@ def nmcris_file_processor():
     return df
 
 
+def save_parcel_stats(df):
+    return df.groupby('parcel_id')['acres'].sum()
+
+
+merged_df = nmcris_file_processor()
 print(nmcris_file_processor())
+print(save_parcel_stats(merged_df))
