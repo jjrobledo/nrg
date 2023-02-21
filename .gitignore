@@ -1,2 +1,5 @@
 shape/
 __pycache__
+*.xlsx
+*.xlsxxlsx
+
