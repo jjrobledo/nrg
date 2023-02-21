@@ -20,6 +20,12 @@ def create_filename(filename, extension):
     return filename.split('.')[0] + extension
 
 
+def extract_column(output_directory, output_filename, df, column):
+    with open(os.path.join(output_directory + '/' + output_filename), 'w') as f:
+        for nmcris_number in df[column].tolist():
+            f.write(str(nmcris_number) + ', ')
+
+
 def shapefile_to_csv(filename, path):
     # change dir to /shapefile
     # set output_directory to /csv
@@ -29,13 +35,12 @@ def shapefile_to_csv(filename, path):
 
     # read a shapefile in /shape and set an output filename with a csv extension
     df = gpd.read_file(filename)
+    df = clean_dataframe(df)
 
     output_filename = create_filename(filename, 'csv')
 
     # open a new file at - ./csv/output_filename.csv and write all rows of the dataframe to the new file
-    with open(os.path.join(output_directory + '/' + output_filename), 'w') as f:
-        for nmcris_number in df.iActivityN.tolist():
-            f.write(str(nmcris_number) + ', ')
+    extract_column(output_directory, output_filename, df, 'nmcris_number')
 
     os.chdir(path)
 
@@ -50,7 +55,7 @@ def process_shapefiles(filename_list, path):
             shapefile_to_csv(filename, path)
 
 
-def clean_csv(df):
+def clean_dataframe(df):
     df = df.drop(
         ['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip'],
         axis=1)
