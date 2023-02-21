@@ -82,26 +82,30 @@ def nmcris_file_processor():
     # get a list of all filenames and get the unique parcel ids
     file_dictionary = get_data_files()
 
+    df = pd.DataFrame()
+
     for dictionary in file_dictionary:
         parcel_id = dictionary['prefix']
         csv_file = dictionary['files']['.csv']
         xlsx_file = dictionary['files']['.xlsx']
 
+        # try opening a csv and xlsx for each parcel_id and assign each to a variable
         csv = pd.read_csv(path + '/' + csv_file)
         xlsx = pd.read_excel(path + '/' + xlsx_file)
 
+        # clean the csv
+        # clean the xlsx
         xlsx = xlsx_cleaner(xlsx)
 
-        print(csv.head(1))
-        print(list(xlsx))
+        # join the csv to the xlsx
+        merged = pd.merge(csv, xlsx, on=['nmcris_number'])
+        # add parcel_name to merged df
+        merged['parcel_id'] = parcel_id
 
-    # try opening a csv and xlsx for each parcel_id and assign each to a variable
+        # merge the cleaned and joined df to the new df
+        df = pd.concat([df, merged])
 
-    # clean the csv
-    # clean the xlsx
-    # join the csv to the xlsx
-    # merge the cleaned and joined df to the new df
-    #
+    return df
 
 
-nmcris_file_processor()
+print(nmcris_file_processor())
