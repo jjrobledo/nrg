@@ -26,6 +26,12 @@ import pandas as pd
 import os
 import re
 
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 1000)
+pd.set_option('display.colheader_justify', 'center')
+pd.set_option('display.precision', 3)
+
 df = pd.DataFrame()
 path = os.getcwd() + '/shape/csv'
 
@@ -58,14 +64,16 @@ def get_data_files():
 def csv_cleaner(df):
     df = df.drop(
         ['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip',
-         'geometry'], axis=1)
+         'geometry'])
 
     return df
 
 
-def xl_cleaner(df):
+def xlsx_cleaner(df):
     df = df.rename(columns={'NMCRIS Activity #': 'nmcris_number', 'Author': 'author'})
-    df = df.drop(['performing_organization', 'total_acres', 'report_title'], axis=1)
+    df = df.drop(['Performing Organization', 'Total Acres', 'Report Title', 'Record Status', 'Performing Org. Report #',
+                  'Lead Agency', 'Lead Agency Report #', 'Activity ID', 'Resource Count', 'Starting Date',
+                  'Activity Type'], axis=1)
 
     return df
 
@@ -82,8 +90,10 @@ def nmcris_file_processor():
         csv = pd.read_csv(path + '/' + csv_file)
         xlsx = pd.read_excel(path + '/' + xlsx_file)
 
+        xlsx = xlsx_cleaner(xlsx)
+
         print(csv.head(1))
-        print(xlsx.head(1))
+        print(list(xlsx))
 
     # try opening a csv and xlsx for each parcel_id and assign each to a variable
 
