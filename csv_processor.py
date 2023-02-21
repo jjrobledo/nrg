@@ -46,3 +46,21 @@ def get_data_files():
                 matching_prefix_files[prefix] = [file]
 
     return matching_prefix_files
+
+
+def nmcris_file_processor():
+    # get a list of all filenames and get the unique parcel ids
+    file_dictionary = get_data_files()
+
+    for parcel_id, files in file_dictionary.items():
+        print(parcel_id, files)
+
+    # try opening a csv and xlsx for each parcel_id and assign each to a variable
+    # clean the csv
+    # clean the xlsx
+    # join the csv to the xlsx
+    # merge the cleaned and joined df to the emshapefiles = []
+    #
+
+
+nmcris_file_processor()
