@@ -1,13 +1,19 @@
 import os
 import geopandas as gpd
 
+def make_directory(path, directory_name):
+    directory_name = 'csv'
+    output_directory = os.path.join(path, directory_name)
+
+    return output_directory
+
 
 def shapefile_to_csv(filename, path):
     # change dir to /shapefile
     # set output_directory to /csv
     os.chdir(path)
-    directory = 'csv'
-    output_directory = os.path.join(path, directory)
+    directory_name = 'csv'
+    output_directory = make_directory(path, directory_name)
 
     # read a shapefile in /shape and set an output filename with a csv extension
     df = gpd.read_file(filename)
@@ -39,7 +45,12 @@ def process_shapefiles(filename_list, path):
 
 
 def clean_csv(df):
-    df = df.drop(['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip' ], axis=1)
-    df = df.rename(columns={'iActivityN': 'nmcris_number', 'dFieldStar': 'field_date', 'sPerfOrgNa': 'performing_organization', 'sPerfOrigin': 'performing_organiation_id', 'sReportTit': 'title', 'sAuthor': 'author', 'dReportDat': 'report_data', 'bSurvey3': 'survey', 'rSurveyAcr': 'acres'})
+    df = df.drop(
+        ['sPerfOrgIn', 'sLeadAgenc', 'sLeadAge_1', 'sSponsor', 'iAllResour', 'bGISAccept', 'iStatusCur', 'sDescrip'],
+        axis=1)
+    df = df.rename(
+        columns={'iActivityN': 'nmcris_number', 'dFieldStar': 'field_date', 'sPerfOrgNa': 'performing_organization',
+                 'sPerfOrigin': 'performing_organiation_id', 'sReportTit': 'title', 'sAuthor': 'author',
+                 'dReportDat': 'report_data', 'bSurvey3': 'survey', 'rSurveyAcr': 'acres'})
 
     return df
