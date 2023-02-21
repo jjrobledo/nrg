@@ -1,4 +1,5 @@
 import os
+from shape_to_nmcris_number_csv import process_shapefiles
 
 path = os.getcwd() + '/shape'
 print(path)
@@ -12,4 +13,4 @@ for file in files:
         shapefiles.append(file)
 
 
-print(shapefiles)
+process_shapefiles(shapefiles, path)
