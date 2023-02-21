@@ -5,7 +5,12 @@ def make_directory(path, directory_name):
     directory_name = 'csv'
     output_directory = os.path.join(path, directory_name)
 
-    return output_directory
+    try:
+        # try: make a new directory called csv in the current directory /shape
+        os.mkdir(output_directory)
+        print("Output folder created")
+    except Exception:
+        pass
 
 
 def shapefile_to_csv(filename, path):
@@ -18,13 +23,6 @@ def shapefile_to_csv(filename, path):
     # read a shapefile in /shape and set an output filename with a csv extension
     df = gpd.read_file(filename)
     output_filename = filename.split('.')[0] + '.csv'
-
-    try:
-        # try: make a new directory called csv in the current directory /shape
-        os.mkdir(output_directory)
-        print("Output folder created")
-    except Exception:
-        pass
 
     # open a new file at - ./csv/output_filename.csv and write all rows of the dataframe to the new file
     with open(os.path.join(output_directory + '/' + output_filename), 'w') as f:
