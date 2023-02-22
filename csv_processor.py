@@ -58,7 +58,7 @@ def xlsx_cleaner(df):
 
 
 def merged_df_cleaner(df):
-    df.loc[df.title.str.isupper(), 'title'] = df.title.str.title()
+    df['title'] = df['title'].apply(lambda x: x.title() if (isinstance(x, str) and x.isupper()) else x)
     df.author = df.author.str.title()
     df.performing_organization = df.performing_organization.str.title()
 
@@ -122,5 +122,7 @@ merged_df = nmcris_file_processor()
 merged_df.to_csv(path + '/final.csv')
 print(save_parcel_stats(merged_df))
 # Example usage:
-print(merged_df[merged_df.duplicated()])
 csv_to_bibtex(path + '/final.csv', path + '/bib.bib')
+
+print("------------------- Duplicates -------------------")
+print(merged_df[merged_df.duplicated()])
